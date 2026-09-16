@@ -1,6 +1,6 @@
 import { Router } from "express"
 import authenticate from "../middlewares/auth.middleware.js"
-import { createOrder, getOrders, cancelOrder, updateOrderStatus } from "../controller/order.controller.js"
+import { createOrder, getOrders, cancelOrder, updateOrderStatus } from "../controllers/order.controller.js"
 import { createOrderValidator } from "../validator/order.validator.js"
 
 

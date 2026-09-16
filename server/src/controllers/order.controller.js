@@ -91,7 +91,7 @@ export const createOrder = async (req, res) => {
                     title: product.product.title,
                     description: product.product.description,
                     price: product.product.price,
-                    image: product.product.images[ 0 ]?.url ?? "",
+                    image: product.product.images[0]?.url ?? "",
                     productId: product.product._id
                 },
                 quantity: product.quantity,
@@ -158,7 +158,7 @@ export const cancelOrder = async (req, res) => {
         })
     }
 
-    if ([ "DELIVERED", "SHIPPED" ].includes(order.status)) {
+    if (["DELIVERED", "SHIPPED"].includes(order.status)) {
         return res.status(400).json({
             message: "Order cannot be cancelled as it is already " + order.status.toLowerCase()
         })
@@ -194,7 +194,7 @@ export const updateOrderStatus = async (req, res) => {
 
     if (status == "PLACED") {
 
-        if ([ "CANCELLED", "DELIVERED", "SHIPPED" ].includes(order.status)) {
+        if (["CANCELLED", "DELIVERED", "SHIPPED"].includes(order.status)) {
             return res.status(400).json({
                 message: "Order status cannot be changed to PLACED as it is already " + order.status.toLowerCase()
             })
@@ -207,7 +207,7 @@ export const updateOrderStatus = async (req, res) => {
     }
 
     if (status == "SHIPPED") {
-        if ([ "CANCELLED", "DELIVERED" ].includes(order.status)) {
+        if (["CANCELLED", "DELIVERED"].includes(order.status)) {
             return res.status(400).json({
                 message: "Order status cannot be changed to SHIPPED as it is already " + order.status.toLowerCase()
             })
@@ -220,7 +220,7 @@ export const updateOrderStatus = async (req, res) => {
     }
 
     if (status == "DELIVERED") {
-        if ([ "CANCELLED" ].includes(order.status)) {
+        if (["CANCELLED"].includes(order.status)) {
             return res.status(400).json({
                 message: "Order status cannot be changed to DELIVERED as it is already " + order.status.toLowerCase()
             })
