@@ -86,12 +86,14 @@ export const createOrder = async (req, res) => {
         user: user.id,
         address: req.body.address,
         products: cart.products.map(product => {
+            const rawImage = product.product.images?.[0]
+            const imageUrl = typeof rawImage === 'string' ? rawImage : (rawImage?.url ?? "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab")
             return {
                 product: {
                     title: product.product.title,
                     description: product.product.description,
                     price: product.product.price,
-                    image: product.product.images[0]?.url ?? "",
+                    image: imageUrl,
                     productId: product.product._id
                 },
                 quantity: product.quantity,
@@ -105,6 +107,11 @@ export const createOrder = async (req, res) => {
             currency: "INR"
         }
     })
+
+    await cartModel.findOneAndUpdate(
+        { user: user.id },
+        { $set: { products: [] } }
+    )
 
     return res.status(201).json({
         message: "Order placed successfully",

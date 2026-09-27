@@ -51,14 +51,17 @@ export const addProductToCart = async (req, res) => {
             })
         }
 
-        await cartModel.findOneAndUpdate({
-            user: req.user.id,
-            arrayFilters: [{ "elem.product": productId, "elem.size": productSize }]
-        }, {
-            $set: {
-                "products.$[elem].quantity": totalQuantity
+        await cartModel.findOneAndUpdate(
+            { user: req.user.id },
+            {
+                $set: {
+                    "products.$[elem].quantity": totalQuantity
+                }
+            },
+            {
+                arrayFilters: [{ "elem.product": productId, "elem.size": productSize }]
             }
-        })
+        )
     } else {
         await cartModel.findOneAndUpdate({
             user: req.user.id
@@ -101,28 +104,31 @@ export const removeProductFromCart = async (req, res) => {
     }
 
     if(productInCart.quantity <= quantity) {
-        await cartModel.findOneAndUpdate({
-            user: req.user.id,
-            arrayFilters: [ { "elem.product": productId, "elem.size": productSize}]
-        }, {
-            $pull: {
-                products: {
-                    product: productId,
-                    size: productSize
+        await cartModel.findOneAndUpdate(
+            { user: req.user.id },
+            {
+                $pull: {
+                    products: {
+                        product: productId,
+                        size: productSize
+                    }
                 }
             }
-        })
+        )
     } else {
         const newQuantity = productInCart.quantity - quantity
 
-        await cartModel.findOneAndUpdate({
-            user: req.user.id,
-            arrayFilters: [ { "elem.product": productId, "elem.size": productSize}]
-        }, {
-            $set: {
-                "products.$[elem].quantity": newQuantity
+        await cartModel.findOneAndUpdate(
+            { user: req.user.id },
+            {
+                $set: {
+                    "products.$[elem].quantity": newQuantity
+                }
+            },
+            {
+                arrayFilters: [ { "elem.product": productId, "elem.size": productSize}]
             }
-        })
+        )
     }
 
     return res.status(200).json({
