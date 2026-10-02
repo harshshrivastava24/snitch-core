@@ -8,6 +8,11 @@ const userSchema = new mongoose.Schema({
         minLength: 3,
         maxLength: 50,
     },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true,
+    },
     email: {
         type: String,
         required: true,
@@ -16,14 +21,14 @@ const userSchema = new mongoose.Schema({
     },
     passwordHash: {
         type: String,
-        required: true,
+        required: false,
         select: false
     },
     role: {
         type: String,
         required: true,
         default: "user",
-        enum: [ "user", "seller" ]
+        enum: ["user", "seller"]
     }
 })
 
