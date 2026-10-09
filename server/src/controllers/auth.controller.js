@@ -57,37 +57,6 @@ export async function login(req, res) {
 
     const { email, password } = req.body
 
-    const errors = []
-
-    if (!email) {
-        errors.push({
-            message: "Email is required",
-            field: "email"
-        })
-    }
-
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-    if (email && !regex.test(email)) {
-        errors.push({
-            message: "Email is not valid",
-            field: "email"
-        })
-    }
-
-    if (!password) {
-        errors.push({
-            message: "Password is required",
-            field: "password"
-        })
-    }
-
-    if (errors.length > 0) {
-        return res.status(400).json({
-            message: "Validation errors",
-            errors: errors
-        })
-    }
 
     const user = await userModel.findOne({ email }).select("+passwordHash")
 
@@ -143,4 +112,14 @@ export async function getMe(req, res) {
             message: "Invalid or expired token"
         })
     }
+}
+
+export function googleCallback(req, res) {
+    const token = jwt.sign({
+        id: req.user._id,
+        role: req.user.role
+    }, config.JWT_SECRET)
+
+
+    res.redirect(`http://localhost:5173/oauth-success?token=${token}`)
 }
